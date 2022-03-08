@@ -1,0 +1,22 @@
+---
+title: "homework06.Rmd"
+author: "Nathaniel Wigdahl"
+date: "3/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+HAPPY <- readRDS("data/HAPPY.rds")
+```
+### Part 1
+
+First we'll clean the data by replaced all nulls values with NA. (IAP, DK)
+```{r}
+HAPPY[HAPPY == "IAP"] <- NA;
+HAPPY[HAPPY == "DK"] <- NA
+```
