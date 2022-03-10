@@ -20,3 +20,70 @@ First we'll clean the data by replaced all nulls values with NA. (IAP, DK)
 HAPPY[HAPPY == "IAP"] <- NA;
 HAPPY[HAPPY == "DK"] <- NA
 ```
+
+Next we need to change "89 or older to 89"
+```{r}
+HAPPY[HAPPY == "89 OR OLDER"] <- 89
+```
+
+#### Organizing and cleaning variables
+Happy 
+```{r}
+HAPPY <- HAPPY %>% mutate(HAPPINESS = factor(HAPPY), .keep = "unused", .before = 1);
+levels(HAPPY$HAPPINESS); #These levels make sense.
+```
+AGE:
+```{r make AGE numeric}
+HAPPY <- HAPPY %>% mutate(AGE = as.numeric(AGE))
+```
+SEX:
+```{r make SEX a factor}
+HAPPY <- HAPPY %>% mutate(SEX = factor(SEX)) #binomial variable, order doesn't matter
+
+```
+MARITAL:
+```{r make MARITAL a factor}
+HAPPY <- HAPPY %>% mutate(MARITAL = factor(MARITAL))
+
+```
+DEGREE:
+```{r make DEGREE a factor}
+HAPPY <- HAPPY %>% mutate(DEGREE = factor(DEGREE, levels = c("LT HIGH SCHOOL", "HIGH SCHOOL", "JUNIOR COLLEGE", "BACHELOR", "GRADUATE")))
+```
+FINRELA:
+```{r make FINRELA a factor}
+HAPPY <- HAPPY %>% mutate(FINRELA = factor(FINRELA, levels = c("FAR BELOW AVERAGE", "BELOW AVERAGE",   "AVERAGE", "ABOVE AVERAGE",  "FAR ABOVE AVERAGE" )))
+
+```
+HEALTH:
+```{r make HEALTH a factor}
+HAPPY <- HAPPY %>% mutate(HEALTH = factor(HEALTH, levels = c( "POOR", "FAIR",  "GOOD", "EXCELLENT")))
+
+```
+PARTYID:
+```{r make PARTYID a factor}
+HAPPY <- HAPPY %>% mutate(PARTYID = factor(PARTYID, levels =c("STRONG DEMOCRAT", "NOT STR DEMOCRAT", "IND,NEAR DEM", "INDEPENDENT", "OTHER PARTY", "IND,NEAR REP", "NOT STR REPUBLICAN",  "STRONG REPUBLICAN")))
+```
+POLVIEWS:
+```{r make POLVIEWS a factor}
+HAPPY <- HAPPY %>% mutate(POLVIEWS = factor(POLVIEWS, levels= c("EXTRMLY CONSERVATIVE", "CONSERVATIVE", "SLGHTLY CONSERVATIVE", "MODERATE", "SLIGHTLY LIBERAL", "LIBERAL",   "EXTREMELY LIBERAL" )))
+
+```
+
+
+### Part 2: The Keys to Happiness
+Investigate the relationship between happiness and two other variables.
+
+I chose to investigate the relationship between finances (FINRELA) and happiness, and political views and happiness. My initial hypothesis is that the happiest people will be those with an AVERAGE value for FINRELA and a MODERATE value for POLVIEW.
+
+```{r}
+HAPPY_COMP <- HAPPY %>% select(HAPPINESS, FINRELA, POLVIEWS) #Create a smaller data.frame for our examinations
+HAPPY_COMP %>% ggplot(aes(x = FINRELA, fill = HAPPINESS)) + geom_bar(position = "dodge") +  scale_x_discrete(guide = guide_axis(n.dodge=2));
+HAPPY_COMP %>% ggplot(aes(x = POLVIEWS, fill = HAPPINESS)) + geom_bar(position = "dodge") +  scale_x_discrete(guide = guide_axis(n.dodge=3))
+```
+
+In both of these visuals, we want to examine ratios between the colored bars. 
+First for FINRELA, we can see an increase in the ratio of VERY HAPPY as people view themselves as above average wealth. We also see a steep decrease in NOT TOO HAPPY when we move from BELOW AVERAGE to AVERAGE. While my hypothesis has merit, I think we're seeing different trends here. I may have overlooked that this survey data is about how people perceive their financial situation, not how it actually is.
+
+Second for POLVIEWS, this relationship may need more study, but this initial investigation seems to indicate little relation between these variables. There does seem to be a slightly higher ratio of VERY HAPPYs on the conservative end of the spectrum, but nothing extreme. I would likely not invest much time into exploring this relation, as there are certainly more helpful relations between the variables in this data.
+
